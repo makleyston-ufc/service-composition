@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./broker-mqtt/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./broker-mqtt/mosquitto/data:/mosquitto/data
+      - ./broker-mqtt/mosquitto/log:/mosquitto/log
+
+  producer-bus:
+    build:
+      context: ./producer/bus
+    container_name: producer-bus
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+
+  producer-radar:
+    build:
+      context: ./producer/radar
+    container_name: producer-radar
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+
+  l0-exemplo-service:
+    build:
+      context: ./services/L0/exemplo-servico-python
+    container_name: l0-exemplo-service
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l0-example
+      MQTT_PUB_TOPIC: services/l0/example/events
+      MQTT_SUB_TOPIC: services/l0/example/commands
+    depends_on:
+      - mosquitto
