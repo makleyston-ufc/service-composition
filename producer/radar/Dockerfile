@@ -6,6 +6,7 @@ RUN apt-get update \
 
 WORKDIR /app
 COPY main.cpp /app/main.cpp
+COPY dataset /app/dataset
 RUN g++ -O2 -std=c++17 /app/main.cpp -lmosquitto -o /app/producer-radar
 
 CMD ["/app/producer-radar"]

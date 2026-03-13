@@ -1,0 +1,135 @@
+digraph SmartCityComposition {
+
+    rankdir=LR;
+    compound=true;
+    newrank=true;
+    nodesep=0.3;
+    ranksep=0.6;
+
+    node [shape=box, style=rounded, width=2.4, height=0.7];
+
+    // =========================
+    // RAW
+    // =========================
+    RAW_Radar [label="(1) RAW Radar\n(mobility)"];
+    RAW_Bus   [label="(2) RAW Bus\n(mobility)"];
+
+    // =========================
+    // L0
+    // =========================
+    subgraph cluster_L0 {
+        label="L0";
+        style="rounded,dashed";
+        margin=20;
+
+        subgraph L0_order {
+            rank=same;
+            S01 [label="(1) Traffic Flow\n(mobility)"];
+            S02 [label="(2) Traffic Speed\n(mobility)"];
+            S03 [label="(3) Bus Operation Status\n(mobility)"];
+            S04 [label="(4) Bus Regional Supply\n(mobility)"];
+
+            S01 -> S02 [style=invis, constraint=false];
+            S02 -> S03 [style=invis, constraint=false];
+            S03 -> S04 [style=invis, constraint=false];
+        }
+    }
+
+    // =========================
+    // L1
+    // =========================
+    subgraph cluster_L1 {
+        label="L1";
+        style="rounded,dashed";
+        margin=20;
+
+        subgraph L1_order {
+            rank=same;
+            S11 [label="(1) Mobility Efficiency Index\n(mobility)"];
+            S12 [label="(2) Urban Congestion Index\n(mobility)"];
+            S13 [label="(3) Regional Mobility Pressure\n(mobility)"];
+
+            S13p [
+                label="(3') Alternative Regional Pressure\n(mobility)",
+                style="rounded,filled",
+                fillcolor="#ccffcc",
+                color=darkgreen
+            ];
+
+            S11 -> S12 [style=invis, constraint=false];
+            S12 -> S13 [style=invis, constraint=false];
+            S13 -> S13p [style=invis, constraint=false];
+        }
+    }
+
+    // =========================
+    // L2
+    // =========================
+    subgraph cluster_L2 {
+        label="L2";
+        style="rounded,dashed";
+        margin=20;
+
+        subgraph L2_order {
+            rank=same;
+            S21 [label="(1) Social Accessibility Index\n(social)"];
+            S22 [label="(2) Urban Risk Index\n(infrastructure)"];
+
+            S21 -> S22 [style=invis, constraint=false];
+            // s2inv [style=invis];
+        }
+    }
+
+    // =========================
+    // L3
+    // =========================
+    subgraph cluster_L3 {
+        label="L3";
+        style="rounded,dashed";
+        margin=20;
+
+        subgraph L3_order {
+            rank=same;
+            S31 [label="(1) Strategic Intervention Priority\n(planning)"];
+            s3inv [style=invis];
+            S32 [label="(2) Integrated Urban Vulnerability\n(planning)"];
+
+            S31 -> S32 [style=invis, constraint=false];
+        }
+    }
+
+    // =========================
+    // REAL EDGES
+    // =========================
+
+    RAW_Radar -> S01;
+    RAW_Radar -> S02;
+    RAW_Bus   -> S03;
+    RAW_Bus   -> S04;
+
+    S02 -> S11;
+    S03 -> S11;
+
+    S01 -> S12;
+    S02 -> S12;
+
+    S01 -> S13;
+    S04 -> S13;
+
+    S01 -> S13p [style=dotted, color=darkgreen, penwidth=2];
+    S04 -> S13p [style=dotted, color=darkgreen, penwidth=2];
+
+    S13p -> S21 [style=dotted, color=darkgreen, penwidth=2];
+    S13p -> S31 [style=dotted, color=darkgreen, penwidth=2];
+
+    S13 -> S21;
+    S11 -> S21;
+
+    S12 -> S22;
+
+    S21 -> S31;
+    S13 -> S31;
+
+    S22 -> S32;
+    S21 -> S32;
+}

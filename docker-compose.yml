@@ -1,12 +1,10 @@
-version: "3.9"
-
 services:
   mosquitto:
     image: eclipse-mosquitto:2
     container_name: mosquitto
     restart: unless-stopped
     ports:
-      - "1883:1883"
+      - "1884:1883"
     volumes:
       - ./broker-mqtt/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - ./broker-mqtt/mosquitto/data:/mosquitto/data
@@ -17,6 +15,11 @@ services:
       context: ./producer/bus
     container_name: producer-bus
     restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_PUB_TOPIC: service/mobility/observation/bus-telemetry
+      MQTT_SUB_TOPIC: service/mobility/command/bus
     depends_on:
       - mosquitto
 
@@ -25,19 +28,206 @@ services:
       context: ./producer/radar
     container_name: producer-radar
     restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_PUB_TOPIC: service/mobility/observation/radar-telemetry
+      MQTT_SUB_TOPIC: service/mobility/command/radar
     depends_on:
       - mosquitto
 
-  l0-exemplo-service:
+  l0-traffic-flow:
     build:
-      context: ./services/L0/exemplo-servico-python
-    container_name: l0-exemplo-service
+      context: ./services
+      dockerfile: L0/traffic-flow/Dockerfile
+    container_name: l0-traffic-flow
     restart: unless-stopped
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
-      MQTT_CLIENT_ID: l0-example
-      MQTT_PUB_TOPIC: services/l0/example/events
-      MQTT_SUB_TOPIC: services/l0/example/commands
+      MQTT_CLIENT_ID: l0-traffic-flow
+      MQTT_SUB_TOPICS: service/mobility/observation/radar-telemetry
+      MQTT_PUB_TOPIC: service/mobility/inference/traffic-flow
+      SERVICE_URN: urn:ufcity:service:traffic-flow
     depends_on:
       - mosquitto
+      - producer-radar
+
+  l0-traffic-speed:
+    build:
+      context: ./services
+      dockerfile: L0/traffic-speed/Dockerfile
+    container_name: l0-traffic-speed
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l0-traffic-speed
+      MQTT_SUB_TOPICS: service/mobility/observation/radar-telemetry
+      MQTT_PUB_TOPIC: service/mobility/inference/traffic-speed
+      SERVICE_URN: urn:ufcity:service:traffic-speed
+    depends_on:
+      - mosquitto
+      - producer-radar
+
+  l0-bus-operation-status:
+    build:
+      context: ./services
+      dockerfile: L0/bus-operation-status/Dockerfile
+    container_name: l0-bus-operation-status
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l0-bus-operation-status
+      MQTT_SUB_TOPIC: service/mobility/observation/bus-telemetry
+      MQTT_PUB_TOPIC: service/mobility/inference/bus-operation-status
+      SERVICE_URN: urn:ufcity:service:bus-operation-status
+    depends_on:
+      - mosquitto
+      - producer-bus
+
+  l0-bus-regional-supply:
+    build:
+      context: ./services
+      dockerfile: L0/bus-regional-supply/Dockerfile
+    container_name: l0-bus-regional-supply
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l0-bus-regional-supply
+      MQTT_SUB_TOPICS: service/mobility/observation/bus-telemetry
+      MQTT_PUB_TOPIC: service/mobility/inference/bus-regional-supply
+      SERVICE_URN: urn:ufcity:service:bus-regional-supply
+    depends_on:
+      - mosquitto
+      - producer-bus
+
+  # l1-mobility-efficiency-index:
+  #   build:
+  #     context: ./services
+  #     dockerfile: L1/mobility-efficiency-index/Dockerfile
+  #   container_name: l1-mobility-efficiency-index
+  #   restart: unless-stopped
+  #   environment:
+  #     MQTT_HOST: mosquitto
+  #     MQTT_PORT: 1883
+  #     MQTT_CLIENT_ID: l1-mobility-efficiency-index
+  #     MQTT_SUB_TOPICS: service/mobility/inference/traffic-speed,service/mobility/inference/bus-operation-status
+  #     MQTT_PUB_TOPIC: service/mobility/inference/mobility-efficiency-index
+  #     SERVICE_URN: urn:ufcity:service:mobility-efficiency-index
+  #   depends_on:
+  #     - mosquitto
+
+  # l1-urban-congestion-index:
+  #   build:
+  #     context: ./services
+  #     dockerfile: L1/urban-congestion-index/Dockerfile
+  #   container_name: l1-urban-congestion-index
+  #   restart: unless-stopped
+  #   environment:
+  #     MQTT_HOST: mosquitto
+  #     MQTT_PORT: 1883
+  #     MQTT_CLIENT_ID: l1-urban-congestion-index
+  #     MQTT_SUB_TOPICS: service/mobility/inference/traffic-flow,service/mobility/inference/traffic-speed
+  #     MQTT_PUB_TOPIC: service/mobility/inference/urban-congestion-index
+  #     SERVICE_URN: urn:ufcity:service:urban-congestion-index
+  #   depends_on:
+  #     - mosquitto
+
+  # l1-regional-mobility-pressure:
+  #   build:
+  #     context: ./services
+  #     dockerfile: L1/regional-mobility-pressure/Dockerfile
+  #   container_name: l1-regional-mobility-pressure
+  #   restart: unless-stopped
+  #   environment:
+  #     MQTT_HOST: mosquitto
+  #     MQTT_PORT: 1883
+  #     MQTT_CLIENT_ID: l1-regional-mobility-pressure
+  #     MQTT_SUB_TOPICS: service/mobility/inference/traffic-flow,service/mobility/inference/bus-regional-supply
+  #     MQTT_PUB_TOPIC: service/mobility/inference/regional-mobility-pressure
+  #     SERVICE_URN: urn:ufcity:service:regional-mobility-pressure
+  #   depends_on:
+  #     - mosquitto
+
+  # l1-alternative-regional-pressure:
+  #   build:
+  #     context: ./services
+  #     dockerfile: L1/alternative-regional-pressure/Dockerfile
+  #   container_name: l1-alternative-regional-pressure
+  #   restart: unless-stopped
+  #   environment:
+  #     MQTT_HOST: mosquitto
+  #     MQTT_PORT: 1883
+  #     MQTT_CLIENT_ID: l1-alternative-regional-pressure
+  #     MQTT_SUB_TOPICS: service/mobility/inference/traffic-flow,service/mobility/inference/bus-regional-supply
+  #     MQTT_PUB_TOPIC: service/mobility/inference/alternative-regional-pressure
+  #     SERVICE_URN: urn:ufcity:service:alternative-regional-pressure
+  #   depends_on:
+  #     - mosquitto
+
+  # l2-social-accessibility-index:
+  #   build:
+  #     context: ./services
+  #     dockerfile: L2/social-accessibility-index/Dockerfile
+  #   container_name: l2-social-accessibility-index
+  #   restart: unless-stopped
+  #   environment:
+  #     MQTT_HOST: mosquitto
+  #     MQTT_PORT: 1883
+  #     MQTT_CLIENT_ID: l2-social-accessibility-index
+  #     MQTT_SUB_TOPICS: service/mobility/inference/regional-mobility-pressure,service/mobility/inference/mobility-efficiency-index
+  #     MQTT_PUB_TOPIC: service/social/inference/social-accessibility-index
+  #     SERVICE_URN: urn:ufcity:service:social-accessibility-index
+  #   depends_on:
+  #     - mosquitto
+
+  # l2-urban-risk-index:
+  #   build:
+  #     context: ./services
+  #     dockerfile: L2/urban-risk-index/Dockerfile
+  #   container_name: l2-urban-risk-index
+  #   restart: unless-stopped
+  #   environment:
+  #     MQTT_HOST: mosquitto
+  #     MQTT_PORT: 1883
+  #     MQTT_CLIENT_ID: l2-urban-risk-index
+  #     MQTT_SUB_TOPICS: service/mobility/inference/urban-congestion-index
+  #     MQTT_PUB_TOPIC: service/infrastructure/inference/urban-risk-index
+  #     SERVICE_URN: urn:ufcity:service:urban-risk-index
+  #   depends_on:
+  #     - mosquitto
+
+  # l3-strategic-intervention-priority:
+  #   build:
+  #     context: ./services
+  #     dockerfile: L3/strategic-intervention-priority/Dockerfile
+  #   container_name: l3-strategic-intervention-priority
+  #   restart: unless-stopped
+  #   environment:
+  #     MQTT_HOST: mosquitto
+  #     MQTT_PORT: 1883
+  #     MQTT_CLIENT_ID: l3-strategic-intervention-priority
+  #     MQTT_SUB_TOPICS: service/social/inference/social-accessibility-index,service/mobility/inference/regional-mobility-pressure
+  #     MQTT_PUB_TOPIC: service/planning/inference/strategic-intervention-priority
+  #     SERVICE_URN: urn:ufcity:service:strategic-intervention-priority
+  #   depends_on:
+  #     - mosquitto
+
+  # l3-integrated-urban-vulnerability:
+  #   build:
+  #     context: ./services
+  #     dockerfile: L3/integrated-urban-vulnerability/Dockerfile
+  #   container_name: l3-integrated-urban-vulnerability
+  #   restart: unless-stopped
+  #   environment:
+  #     MQTT_HOST: mosquitto
+  #     MQTT_PORT: 1883
+  #     MQTT_CLIENT_ID: l3-integrated-urban-vulnerability
+  #     MQTT_SUB_TOPICS: service/infrastructure/inference/urban-risk-index,service/social/inference/social-accessibility-index
+  #     MQTT_PUB_TOPIC: service/planning/inference/integrated-urban-vulnerability
+  #     SERVICE_URN: urn:ufcity:service:integrated-urban-vulnerability
+  #   depends_on:
+  #     - mosquitto
