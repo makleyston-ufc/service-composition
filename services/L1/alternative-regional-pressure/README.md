@@ -2,7 +2,7 @@
 
 ## Description
 
-Alternative composition path for regional mobility pressure based on traffic flow and bus regional supply.
+Infers regional mobility pressure by combining traffic flow and bus regional supply observations.
 
 ## Application Domain
 
@@ -19,16 +19,17 @@ IoT-Stream, SOSA/SSN, SAREF
 
 ## Output Topic
 
-`service/mobility/inference/alternative-regional-pressure`
+- `service/mobility/inference/alternative-regional-pressure`
 
 ## ML Model
 
-Scikit-learn-compatible model loaded from `model.joblib` through the generic runtime (`run_generic_service`).
+Scikit-learn Pipeline loaded from `model.joblib` (current trained estimator: `ExtraTreesClassifier`).
 
 ## Possible Outputs
 
-- Model-dependent prediction label/value (stringified).
-- Runtime fallback values: `model-not-loaded`, `inference-error`, `model-without-predict-method`.
+- `baixa`
+- `media`
+- `alta`
 
 ## Output Example
 
@@ -38,7 +39,8 @@ Scikit-learn-compatible model loaded from `model.joblib` through the generic run
   "iot-stream:belongsTo": "urn:ufcity:service:alternative-regional-pressure",
   "saref:hasResult": {
     "@type": "saref:PropertyValue",
-    "saref:hasValue": "medium"
+    "saref:hasValue": "media",
+    "urn:ufcity:pressureIndex": 65.8
   }
 }
 ```

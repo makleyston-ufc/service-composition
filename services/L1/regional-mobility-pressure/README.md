@@ -2,7 +2,7 @@
 
 ## Description
 
-Combines traffic flow and bus regional supply to infer regional mobility pressure.
+Infers regional mobility pressure by combining traffic flow and bus regional supply observations.
 
 ## Application Domain
 
@@ -23,12 +23,13 @@ IoT-Stream, SOSA/SSN, SAREF
 
 ## ML Model
 
-Scikit-learn-compatible model loaded from `model.joblib` through the generic runtime (`run_generic_service`).
+Scikit-learn Pipeline loaded from `model.joblib` (current trained estimator: `RandomForestClassifier`).
 
 ## Possible Outputs
 
-- Model-dependent prediction label/value (stringified).
-- Runtime fallback values: `model-not-loaded`, `inference-error`, `model-without-predict-method`.
+- `baixa`
+- `media`
+- `alta`
 
 ## Output Example
 
@@ -38,7 +39,8 @@ Scikit-learn-compatible model loaded from `model.joblib` through the generic run
   "iot-stream:belongsTo": "urn:ufcity:service:regional-mobility-pressure",
   "saref:hasResult": {
     "@type": "saref:PropertyValue",
-    "saref:hasValue": "medium"
+    "saref:hasValue": "media",
+    "urn:ufcity:pressureIndex": 65.8
   }
 }
 ```

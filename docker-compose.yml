@@ -136,37 +136,37 @@ services:
   #   depends_on:
   #     - mosquitto
 
-  # l1-regional-mobility-pressure:
-  #   build:
-  #     context: ./services
-  #     dockerfile: L1/regional-mobility-pressure/Dockerfile
-  #   container_name: l1-regional-mobility-pressure
-  #   restart: unless-stopped
-  #   environment:
-  #     MQTT_HOST: mosquitto
-  #     MQTT_PORT: 1883
-  #     MQTT_CLIENT_ID: l1-regional-mobility-pressure
-  #     MQTT_SUB_TOPICS: service/mobility/inference/traffic-flow,service/mobility/inference/bus-regional-supply
-  #     MQTT_PUB_TOPIC: service/mobility/inference/regional-mobility-pressure
-  #     SERVICE_URN: urn:ufcity:service:regional-mobility-pressure
-  #   depends_on:
-  #     - mosquitto
+  l1-regional-mobility-pressure:
+    build:
+      context: ./services
+      dockerfile: L1/regional-mobility-pressure/Dockerfile
+    container_name: l1-regional-mobility-pressure
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l1-regional-mobility-pressure
+      MQTT_SUB_TOPICS: service/mobility/inference/traffic-flow,service/mobility/inference/bus-regional-supply
+      MQTT_PUB_TOPIC: service/mobility/inference/regional-mobility-pressure
+      SERVICE_URN: urn:ufcity:service:regional-mobility-pressure
+    depends_on:
+      - mosquitto
 
-  # l1-alternative-regional-pressure:
-  #   build:
-  #     context: ./services
-  #     dockerfile: L1/alternative-regional-pressure/Dockerfile
-  #   container_name: l1-alternative-regional-pressure
-  #   restart: unless-stopped
-  #   environment:
-  #     MQTT_HOST: mosquitto
-  #     MQTT_PORT: 1883
-  #     MQTT_CLIENT_ID: l1-alternative-regional-pressure
-  #     MQTT_SUB_TOPICS: service/mobility/inference/traffic-flow,service/mobility/inference/bus-regional-supply
-  #     MQTT_PUB_TOPIC: service/mobility/inference/alternative-regional-pressure
-  #     SERVICE_URN: urn:ufcity:service:alternative-regional-pressure
-  #   depends_on:
-  #     - mosquitto
+  l1-alternative-regional-pressure:
+    build:
+      context: ./services
+      dockerfile: L1/alternative-regional-pressure/Dockerfile
+    container_name: l1-alternative-regional-pressure
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l1-alternative-regional-pressure
+      MQTT_SUB_TOPICS: service/mobility/inference/traffic-flow,service/mobility/inference/bus-regional-supply
+      MQTT_PUB_TOPIC: service/mobility/inference/alternative-regional-pressure
+      SERVICE_URN: urn:ufcity:service:alternative-regional-pressure
+    depends_on:
+      - mosquitto
 
   # l2-social-accessibility-index:
   #   build:
