@@ -133,43 +133,43 @@ services:
       - mosquitto
       - producer-bus
 
-  # l1-mobility-efficiency-index:
-  #   image: ufcity-services-base:local
-  #   build:
-  #     <<: *build-base
-  #   command: ["python", "/app/service/service.py"]
-  #   container_name: l1-mobility-efficiency-index
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./services/L1/mobility-efficiency-index:/app/service:ro
-  #   environment:
-  #     MQTT_HOST: mosquitto
-  #     MQTT_PORT: 1883
-  #     MQTT_CLIENT_ID: l1-mobility-efficiency-index
-  #     MQTT_SUB_TOPICS: service/mobility/inference/traffic-speed,service/mobility/inference/bus-operation-status
-  #     MQTT_PUB_TOPIC: service/mobility/inference/mobility-efficiency-index
-  #     SERVICE_URN: urn:ufcity:service:mobility-efficiency-index
-  #   depends_on:
-  #     - mosquitto
+  l1-mobility-efficiency-index:
+    image: ufcity-services-base:local
+    build:
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
+    container_name: l1-mobility-efficiency-index
+    restart: unless-stopped
+    volumes:
+      - ./services/L1/mobility-efficiency-index:/app/service:ro
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l1-mobility-efficiency-index
+      MQTT_SUB_TOPICS: service/mobility/inference/traffic-speed,service/mobility/inference/bus-operation-status
+      MQTT_PUB_TOPIC: service/mobility/inference/mobility-efficiency-index
+      SERVICE_URN: urn:ufcity:service:mobility-efficiency-index
+    depends_on:
+      - mosquitto
 
-  # l1-urban-congestion-index:
-  #   image: ufcity-services-base:local
-  #   build:
-  #     <<: *build-base
-  #   command: ["python", "/app/service/service.py"]
-  #   container_name: l1-urban-congestion-index
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./services/L1/urban-congestion-index:/app/service:ro
-  #   environment:
-  #     MQTT_HOST: mosquitto
-  #     MQTT_PORT: 1883
-  #     MQTT_CLIENT_ID: l1-urban-congestion-index
-  #     MQTT_SUB_TOPICS: service/mobility/inference/traffic-flow,service/mobility/inference/traffic-speed
-  #     MQTT_PUB_TOPIC: service/mobility/inference/urban-congestion-index
-  #     SERVICE_URN: urn:ufcity:service:urban-congestion-index
-  #   depends_on:
-  #     - mosquitto
+  l1-urban-congestion-index:
+    image: ufcity-services-base:local
+    build:
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
+    container_name: l1-urban-congestion-index
+    restart: unless-stopped
+    volumes:
+      - ./services/L1/urban-congestion-index:/app/service:ro
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l1-urban-congestion-index
+      MQTT_SUB_TOPICS: service/mobility/inference/traffic-flow,service/mobility/inference/traffic-speed
+      MQTT_PUB_TOPIC: service/mobility/inference/urban-congestion-index
+      SERVICE_URN: urn:ufcity:service:urban-congestion-index
+    depends_on:
+      - mosquitto
 
   l1-regional-mobility-pressure:
     image: ufcity-services-base:local
