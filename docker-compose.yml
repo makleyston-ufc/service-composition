@@ -1,4 +1,13 @@
+x-build-base: &build-base
+  context: ./services
+  dockerfile: Dockerfile.base
+
+x-build-producer: &build-producer
+  context: ./producer
+  dockerfile: Dockerfile.base
+
 services:
+
   mosquitto:
     image: eclipse-mosquitto:2
     container_name: mosquitto
@@ -11,10 +20,14 @@ services:
       - ./broker-mqtt/mosquitto/log:/mosquitto/log
 
   producer-bus:
+    image: ufcity-producers-base:local
     build:
-      context: ./producer/bus
+      <<: *build-producer
+    command: ["sh", "-c", "g++ -O2 -std=c++17 /app/main.cpp -lmosquitto -o /tmp/producer && /tmp/producer"]
     container_name: producer-bus
     restart: unless-stopped
+    volumes:
+      - ./producer/bus:/app:ro
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
@@ -24,10 +37,14 @@ services:
       - mosquitto
 
   producer-radar:
+    image: ufcity-producers-base:local
     build:
-      context: ./producer/radar
+      <<: *build-producer
+    command: ["sh", "-c", "g++ -O2 -std=c++17 /app/main.cpp -lmosquitto -o /tmp/producer && /tmp/producer"]
     container_name: producer-radar
     restart: unless-stopped
+    volumes:
+      - ./producer/radar:/app:ro
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
@@ -37,11 +54,14 @@ services:
       - mosquitto
 
   l0-traffic-flow:
+    image: ufcity-services-base:local
     build:
-      context: ./services
-      dockerfile: L0/traffic-flow/Dockerfile
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
     container_name: l0-traffic-flow
     restart: unless-stopped
+    volumes:
+      - ./services/L0/traffic-flow:/app/service:ro
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
@@ -54,11 +74,14 @@ services:
       - producer-radar
 
   l0-traffic-speed:
+    image: ufcity-services-base:local
     build:
-      context: ./services
-      dockerfile: L0/traffic-speed/Dockerfile
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
     container_name: l0-traffic-speed
     restart: unless-stopped
+    volumes:
+      - ./services/L0/traffic-speed:/app/service:ro
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
@@ -71,11 +94,14 @@ services:
       - producer-radar
 
   l0-bus-operation-status:
+    image: ufcity-services-base:local
     build:
-      context: ./services
-      dockerfile: L0/bus-operation-status/Dockerfile
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
     container_name: l0-bus-operation-status
     restart: unless-stopped
+    volumes:
+      - ./services/L0/bus-operation-status:/app/service:ro
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
@@ -88,11 +114,14 @@ services:
       - producer-bus
 
   l0-bus-regional-supply:
+    image: ufcity-services-base:local
     build:
-      context: ./services
-      dockerfile: L0/bus-regional-supply/Dockerfile
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
     container_name: l0-bus-regional-supply
     restart: unless-stopped
+    volumes:
+      - ./services/L0/bus-regional-supply:/app/service:ro
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
@@ -105,11 +134,14 @@ services:
       - producer-bus
 
   # l1-mobility-efficiency-index:
+  #   image: ufcity-services-base:local
   #   build:
-  #     context: ./services
-  #     dockerfile: L1/mobility-efficiency-index/Dockerfile
+  #     <<: *build-base
+  #   command: ["python", "/app/service/service.py"]
   #   container_name: l1-mobility-efficiency-index
   #   restart: unless-stopped
+  #   volumes:
+  #     - ./services/L1/mobility-efficiency-index:/app/service:ro
   #   environment:
   #     MQTT_HOST: mosquitto
   #     MQTT_PORT: 1883
@@ -121,11 +153,14 @@ services:
   #     - mosquitto
 
   # l1-urban-congestion-index:
+  #   image: ufcity-services-base:local
   #   build:
-  #     context: ./services
-  #     dockerfile: L1/urban-congestion-index/Dockerfile
+  #     <<: *build-base
+  #   command: ["python", "/app/service/service.py"]
   #   container_name: l1-urban-congestion-index
   #   restart: unless-stopped
+  #   volumes:
+  #     - ./services/L1/urban-congestion-index:/app/service:ro
   #   environment:
   #     MQTT_HOST: mosquitto
   #     MQTT_PORT: 1883
@@ -137,11 +172,14 @@ services:
   #     - mosquitto
 
   l1-regional-mobility-pressure:
+    image: ufcity-services-base:local
     build:
-      context: ./services
-      dockerfile: L1/regional-mobility-pressure/Dockerfile
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
     container_name: l1-regional-mobility-pressure
     restart: unless-stopped
+    volumes:
+      - ./services/L1/regional-mobility-pressure:/app/service:ro
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
@@ -153,11 +191,14 @@ services:
       - mosquitto
 
   l1-alternative-regional-pressure:
+    image: ufcity-services-base:local
     build:
-      context: ./services
-      dockerfile: L1/alternative-regional-pressure/Dockerfile
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
     container_name: l1-alternative-regional-pressure
     restart: unless-stopped
+    volumes:
+      - ./services/L1/alternative-regional-pressure:/app/service:ro
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
@@ -169,11 +210,14 @@ services:
       - mosquitto
 
   # l2-social-accessibility-index:
+  #   image: ufcity-services-base:local
   #   build:
-  #     context: ./services
-  #     dockerfile: L2/social-accessibility-index/Dockerfile
+  #     <<: *build-base
+  #   command: ["python", "/app/service/service.py"]
   #   container_name: l2-social-accessibility-index
   #   restart: unless-stopped
+  #   volumes:
+  #     - ./services/L2/social-accessibility-index:/app/service:ro
   #   environment:
   #     MQTT_HOST: mosquitto
   #     MQTT_PORT: 1883
@@ -185,11 +229,14 @@ services:
   #     - mosquitto
 
   # l2-urban-risk-index:
+  #   image: ufcity-services-base:local
   #   build:
-  #     context: ./services
-  #     dockerfile: L2/urban-risk-index/Dockerfile
+  #     <<: *build-base
+  #   command: ["python", "/app/service/service.py"]
   #   container_name: l2-urban-risk-index
   #   restart: unless-stopped
+  #   volumes:
+  #     - ./services/L2/urban-risk-index:/app/service:ro
   #   environment:
   #     MQTT_HOST: mosquitto
   #     MQTT_PORT: 1883
@@ -201,11 +248,14 @@ services:
   #     - mosquitto
 
   # l3-strategic-intervention-priority:
+  #   image: ufcity-services-base:local
   #   build:
-  #     context: ./services
-  #     dockerfile: L3/strategic-intervention-priority/Dockerfile
+  #     <<: *build-base
+  #   command: ["python", "/app/service/service.py"]
   #   container_name: l3-strategic-intervention-priority
   #   restart: unless-stopped
+  #   volumes:
+  #     - ./services/L3/strategic-intervention-priority:/app/service:ro
   #   environment:
   #     MQTT_HOST: mosquitto
   #     MQTT_PORT: 1883
@@ -217,11 +267,14 @@ services:
   #     - mosquitto
 
   # l3-integrated-urban-vulnerability:
+  #   image: ufcity-services-base:local
   #   build:
-  #     context: ./services
-  #     dockerfile: L3/integrated-urban-vulnerability/Dockerfile
+  #     <<: *build-base
+  #   command: ["python", "/app/service/service.py"]
   #   container_name: l3-integrated-urban-vulnerability
   #   restart: unless-stopped
+  #   volumes:
+  #     - ./services/L3/integrated-urban-vulnerability:/app/service:ro
   #   environment:
   #     MQTT_HOST: mosquitto
   #     MQTT_PORT: 1883

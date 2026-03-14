@@ -10,6 +10,5 @@ RUN pip install --no-cache-dir \
     scikit-learn==1.8.0
 
 COPY ufcity_microservice_lib /app/ufcity_microservice_lib
-COPY L1/regional-mobility-pressure /app/service
 
-CMD ["python", "/app/service/service.py"]
+CMD ["python", "-c", "raise SystemExit('Define a service command in docker-compose.yml')"]
