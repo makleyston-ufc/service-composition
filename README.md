@@ -32,8 +32,8 @@ The project scenario is defined in [`scenarios.dot`](scenarios.dot) and rendered
 ## Running
 
 ```bash
-git clone <projeto>
-cd <projeto>
+git clone https://github.com/makleyston-ufc/service-composition.git
+cd service-composition
 docker compose up -d
 ```
 
@@ -61,7 +61,7 @@ Examples below are illustrative and may vary by model and input payloads.
 | `services/L1/mobility-efficiency-index` | `service/mobility/inference/mobility-efficiency-index` | `{"sosa:resultTime":"2024-01-01T00:00:00Z","saref:hasResult":{"saref:hasValue":"moderate","urn:ufcity:confidence":0.76},"urn:ufcity:payload":{"index":55.4}}` |
 | `services/L1/urban-congestion-index` | `service/mobility/inference/urban-congestion-index` | `{"sosa:resultTime":"2024-01-01T00:00:00Z","saref:hasResult":{"saref:hasValue":"high","urn:ufcity:confidence":0.74},"urn:ufcity:payload":{"index":72.1}}` |
 | `services/L1/regional-mobility-pressure` | `service/mobility/inference/regional-mobility-pressure` | `{"sosa:resultTime":"2024-01-01T00:00:00Z","saref:hasResult":{"saref:hasValue":"high","urn:ufcity:confidence":0.85},"urn:ufcity:payload":{"pressure_index":82.3}}` |
-| `services/L1/alternative-regional-pressure` | `service/mobility/inference/alternative-regional-pressure` | `{"sosa:resultTime":"2024-01-01T00:00:00Z","saref:hasResult":{"saref:hasValue":"medium","urn:ufcity:confidence":0.82},"urn:ufcity:payload":{"pressure_index":61.8}}` |
+| `services/L1/alternative-regional-pressure` | `service/mobility/inference/regional-mobility-pressure` | `{"sosa:resultTime":"2024-01-01T00:00:00Z","saref:hasResult":{"saref:hasValue":"medium","urn:ufcity:confidence":0.82},"urn:ufcity:payload":{"pressure_index":61.8}}` |
 | `services/L2/social-accessibility-index` | `service/social/inference/social-accessibility-index` | `{"sosa:resultTime":"2024-01-01T00:00:00Z","saref:hasResult":{"saref:hasValue":"medium","urn:ufcity:confidence":0.71},"urn:ufcity:payload":{"index":49.7}}` |
 | `services/L2/urban-risk-index` | `service/infrastructure/inference/urban-risk-index` | `{"sosa:resultTime":"2024-01-01T00:00:00Z","saref:hasResult":{"saref:hasValue":"low","urn:ufcity:confidence":0.77},"urn:ufcity:payload":{"index":34.9}}` |
 | `services/L3/strategic-intervention-priority` | `service/planning/inference/strategic-intervention-priority` | `{"sosa:resultTime":"2024-01-01T00:00:00Z","saref:hasResult":{"saref:hasValue":"priority","urn:ufcity:confidence":0.69},"urn:ufcity:payload":{"priority_level":3}}` |
@@ -75,3 +75,21 @@ Examples below are illustrative and may vary by model and input payloads.
 ## Data Sources
 
 The models were based on real-world data published at https://dados.pbh.gov.br/en/dataset/.
+
+## Authors
+
+### Ph.D. Danne Makleyston Gomes Pereira  
+[![Lattes](https://img.shields.io/badge/Lattes-CNPq-blue)](https://lattes.cnpq.br/2002489019346835)
+[![ORCID](https://img.shields.io/badge/ORCID-0000--0002--8260--5382-A6CE39?logo=orcid)](https://orcid.org/0000-0002-8260-5382)
+
+Federal Insitute of Ceará (IFCE)  
+
+
+---
+
+### Ph.D. Angelo Roncalli Alencar Brayner  
+[![Lattes](https://img.shields.io/badge/Lattes-CNPq-blue)](https://lattes.cnpq.br/3895469714548887)
+[![ORCID](https://img.shields.io/badge/ORCID-0000--0001--9820--9133-A6CE39?logo=orcid)](https://orcid.org/0000-0001-9820-9133)
+
+Federal University of Ceará (UFC)  
+MDCC – Graduate Program in Computer Science
