@@ -209,78 +209,78 @@ services:
     depends_on:
       - mosquitto
 
-  # l2-social-accessibility-index:
-  #   image: ufcity-services-base:local
-  #   build:
-  #     <<: *build-base
-  #   command: ["python", "/app/service/service.py"]
-  #   container_name: l2-social-accessibility-index
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./services/L2/social-accessibility-index:/app/service:ro
-  #   environment:
-  #     MQTT_HOST: mosquitto
-  #     MQTT_PORT: 1883
-  #     MQTT_CLIENT_ID: l2-social-accessibility-index
-  #     MQTT_SUB_TOPICS: service/mobility/inference/regional-mobility-pressure,service/mobility/inference/mobility-efficiency-index
-  #     MQTT_PUB_TOPIC: service/social/inference/social-accessibility-index
-  #     SERVICE_URN: urn:ufcity:service:social-accessibility-index
-  #   depends_on:
-  #     - mosquitto
+  l2-social-accessibility-index:
+    image: ufcity-services-base:local
+    build:
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
+    container_name: l2-social-accessibility-index
+    restart: unless-stopped
+    volumes:
+      - ./services/L2/social-accessibility-index:/app/service:ro
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l2-social-accessibility-index
+      MQTT_SUB_TOPICS: service/mobility/inference/regional-mobility-pressure,service/mobility/inference/mobility-efficiency-index
+      MQTT_PUB_TOPIC: service/social/inference/social-accessibility-index
+      SERVICE_URN: urn:ufcity:service:social-accessibility-index
+    depends_on:
+      - mosquitto
 
-  # l2-urban-risk-index:
-  #   image: ufcity-services-base:local
-  #   build:
-  #     <<: *build-base
-  #   command: ["python", "/app/service/service.py"]
-  #   container_name: l2-urban-risk-index
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./services/L2/urban-risk-index:/app/service:ro
-  #   environment:
-  #     MQTT_HOST: mosquitto
-  #     MQTT_PORT: 1883
-  #     MQTT_CLIENT_ID: l2-urban-risk-index
-  #     MQTT_SUB_TOPICS: service/mobility/inference/urban-congestion-index
-  #     MQTT_PUB_TOPIC: service/infrastructure/inference/urban-risk-index
-  #     SERVICE_URN: urn:ufcity:service:urban-risk-index
-  #   depends_on:
-  #     - mosquitto
+  l2-urban-risk-index:
+    image: ufcity-services-base:local
+    build:
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
+    container_name: l2-urban-risk-index
+    restart: unless-stopped
+    volumes:
+      - ./services/L2/urban-risk-index:/app/service:ro
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l2-urban-risk-index
+      MQTT_SUB_TOPICS: service/mobility/inference/urban-congestion-index
+      MQTT_PUB_TOPIC: service/infrastructure/inference/urban-risk-index
+      SERVICE_URN: urn:ufcity:service:urban-risk-index
+    depends_on:
+      - mosquitto
 
-  # l3-strategic-intervention-priority:
-  #   image: ufcity-services-base:local
-  #   build:
-  #     <<: *build-base
-  #   command: ["python", "/app/service/service.py"]
-  #   container_name: l3-strategic-intervention-priority
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./services/L3/strategic-intervention-priority:/app/service:ro
-  #   environment:
-  #     MQTT_HOST: mosquitto
-  #     MQTT_PORT: 1883
-  #     MQTT_CLIENT_ID: l3-strategic-intervention-priority
-  #     MQTT_SUB_TOPICS: service/social/inference/social-accessibility-index,service/mobility/inference/regional-mobility-pressure
-  #     MQTT_PUB_TOPIC: service/planning/inference/strategic-intervention-priority
-  #     SERVICE_URN: urn:ufcity:service:strategic-intervention-priority
-  #   depends_on:
-  #     - mosquitto
+  l3-strategic-intervention-priority:
+    image: ufcity-services-base:local
+    build:
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
+    container_name: l3-strategic-intervention-priority
+    restart: unless-stopped
+    volumes:
+      - ./services/L3/strategic-intervention-priority:/app/service:ro
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l3-strategic-intervention-priority
+      MQTT_SUB_TOPICS: service/social/inference/social-accessibility-index,service/mobility/inference/regional-mobility-pressure
+      MQTT_PUB_TOPIC: service/planning/inference/strategic-intervention-priority
+      SERVICE_URN: urn:ufcity:service:strategic-intervention-priority
+    depends_on:
+      - mosquitto
 
-  # l3-integrated-urban-vulnerability:
-  #   image: ufcity-services-base:local
-  #   build:
-  #     <<: *build-base
-  #   command: ["python", "/app/service/service.py"]
-  #   container_name: l3-integrated-urban-vulnerability
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./services/L3/integrated-urban-vulnerability:/app/service:ro
-  #   environment:
-  #     MQTT_HOST: mosquitto
-  #     MQTT_PORT: 1883
-  #     MQTT_CLIENT_ID: l3-integrated-urban-vulnerability
-  #     MQTT_SUB_TOPICS: service/infrastructure/inference/urban-risk-index,service/social/inference/social-accessibility-index
-  #     MQTT_PUB_TOPIC: service/planning/inference/integrated-urban-vulnerability
-  #     SERVICE_URN: urn:ufcity:service:integrated-urban-vulnerability
-  #   depends_on:
-  #     - mosquitto
+  l3-integrated-urban-vulnerability:
+    image: ufcity-services-base:local
+    build:
+      <<: *build-base
+    command: ["python", "/app/service/service.py"]
+    container_name: l3-integrated-urban-vulnerability
+    restart: unless-stopped
+    volumes:
+      - ./services/L3/integrated-urban-vulnerability:/app/service:ro
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_CLIENT_ID: l3-integrated-urban-vulnerability
+      MQTT_SUB_TOPICS: service/infrastructure/inference/urban-risk-index,service/social/inference/social-accessibility-index
+      MQTT_PUB_TOPIC: service/planning/inference/integrated-urban-vulnerability
+      SERVICE_URN: urn:ufcity:service:integrated-urban-vulnerability
+    depends_on:
+      - mosquitto
